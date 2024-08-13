@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Webcam</title>
+  </head>
+
+  <style>
+    #webcam {
+      position: relative;
+    }
+
+    #canvas {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+
+    #capture {
+      margin-right: 4px;
+    }
+  </style>
+
+  <body>
+    <div id="webcam">
+      <video id="video" width="640" height="480" autoplay></video>
+      <canvas id="canvas"></canvas>
+
+      <div>
+        <button id="capture">Chụp ảnh</button>
+        <a id="download" href="#" download="myphoto.png">Tải về</a>
+      </div>
+    </div>
+
+    <script>
+      const video = document.getElementById("video");
+      const capture = document.getElementById("capture");
+      const canvas = document.getElementById("canvas");
+      const download = document.getElementById("download");
+
+      // Get access to the camera
+      // display webcam on video element
+      navigator.mediaDevices
+        .getUserMedia({
+          video: true,
+        })
+        .then((stream) => {
+          video.srcObject = stream;
+        });
+
+      // capture image
+      capture.addEventListener("click", () => {
+        canvas.width = video.videoWidth / 2;
+        canvas.height = video.videoHeight / 2;
+        canvas
+          .getContext("2d")
+          .drawImage(video, 0, 0, canvas.width, canvas.height);
+      });
+
+      // add link to download
+      download.href = canvas.toDataURL("image/png");
+    </script>
+  </body>
+</html>
